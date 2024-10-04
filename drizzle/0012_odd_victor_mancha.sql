@@ -1,0 +1,1 @@
+ALTER TABLE "referrals" RENAME COLUMN "referral_code" TO "referral_code_at";

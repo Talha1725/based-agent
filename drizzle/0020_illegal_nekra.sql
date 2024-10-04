@@ -1,0 +1,1 @@
+ALTER TABLE "preferences" ALTER COLUMN "preference_Email" SET DATA TYPE varchar(255);
