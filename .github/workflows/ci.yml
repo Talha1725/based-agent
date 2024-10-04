@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Run pipeline on push to main branch
+      - main  # Trigger pipeline on push to the main branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # Specify your Node.js version
+        node-version: '14'  # Specify the version of Node.js you're using
 
     - name: Install dependencies
       run: npm install
@@ -24,16 +24,15 @@ jobs:
     - name: Build project
       run: npm run build
 
+    - name: Install sshpass for password authentication
+      run: sudo apt-get install sshpass
+
     - name: Deploy to Server
-      uses: appleboy/ssh-action@v0.1.4
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        password: ${{secrets.SERVER_PASS}}
-        
-        script: |
+      run: |
+        sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           cd /path/to/your/project
           git pull origin main
           npm install
           npm run build
           npm start
+        EOF
