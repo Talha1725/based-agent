@@ -54,7 +54,7 @@ const WaitlistLeaderboard = () => {
         <Card className="bg-white  text-gray-800  mb-8 rounded-none border-2 border-black">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-gray-900 ">
-              Waitlist Leaderboards
+              Waitlist Leaderboard
             </CardTitle>
           </CardHeader>
           <CardContent>
