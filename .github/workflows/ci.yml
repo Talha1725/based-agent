@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger pipeline on push to the main branch
+      - main  # Trigger the workflow on push to the main branch
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18'  # Specify the version of Node.js you're using
+        node-version: '18'  # Use Node.js 18
 
     - name: Install dependencies
       run: npm install
@@ -30,10 +30,9 @@ jobs:
     - name: Deploy to Server
       run: |
         sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          cd /path/to/your/project
+          cd /based-agent || exit
+          source ~/.bashrc  # Load environment variables
           git pull origin main
-          tmux attach -t basedAgent
-          npm install
-          npm run build
-          npm start
+          # Start a new tmux session, or reuse an existing one
+          tmux new-session -d -s basedAgents || tmux send-keys -t basedAgents 'cd /based-agent && npm install && npm run build && npm start' C-m
         EOF
